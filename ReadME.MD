@@ -23,11 +23,11 @@
 
 
 
-             React
+                React
                 │
                 │ HTTP request
                 ▼
-                GateFlow
+                Api-gateway-x
                 │
                 │ inspect
                 │ authenticate
@@ -41,7 +41,7 @@
                 Response
                 │
                 ▼
-                GateFlow
+                Api-gateway-x
                 │
                 ▼
                 React
