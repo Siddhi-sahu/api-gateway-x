@@ -47,3 +47,27 @@
                 React
 
                 
+Implementation Steps:
+
+Step 1: 
+
+                       API GATEWAY
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+      Authentication   Rate Limiting    Logging
+             │              │              │
+             └──────────────┼──────────────┘
+                            │
+                         Routing
+                            │
+              ┌─────────────┼──────────────┐
+              ▼             ▼              ▼
+          User Service  Product Service Payment Service
+              │             │              │
+              └─────────────┼──────────────┘
+                            │
+                         Response
+                            │
+                            ▼
+                          Client
