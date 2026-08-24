@@ -6,9 +6,8 @@ const PORT = 3001
 app.use(express.json())
 
 app.get("/users", async(req, res) => {
-    console.log("hit users")
-    res.status(200).json({
-    "users": [
+    const users = {
+        "users": [
         {
         "id": 1,
         "name": "Himani"
@@ -18,7 +17,17 @@ app.get("/users", async(req, res) => {
         "name": "Siddhi"
         },
     ]
-    })
+    };
+
+    try{
+        console.log("hit users")
+        return res.status(200).json(users);
+
+    }catch(e){
+        console.log(e)
+
+    }
+    
 
 });
 
