@@ -1,11 +1,11 @@
 {
-  "name": "services",
+  "name": "user-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "test": "echo \"\""
   },
   "keywords": [],
