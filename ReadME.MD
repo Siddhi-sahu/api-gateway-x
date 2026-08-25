@@ -50,6 +50,59 @@
 Implementation Steps:
 
 Step 1: 
+             CLIENT
+                │
+                ▼
+       ┌─────────────────┐
+       │     GATEWAY     │
+       │                 │
+       │ Authentication  │
+       │                 │
+       └────────┬────────┘
+                │
+          ┌─────┴──────┐
+          ▼            ▼
+       User          Product
+
+Step 2: After redis:
+
+             CLIENT
+                │
+                ▼
+       ┌─────────────────────┐
+       │       GATEWAY       │
+       │                     │
+       │ Authentication      │
+       │ Rate Limiting ──────┼──→ Redis
+       │ Routing             │
+       │ Logging             │
+       └──────────┬──────────┘
+                  │
+             ┌────┴─────┐
+             ▼          ▼
+          User       Product
+
+Step 3: after postgresql:
+
+             CLIENT
+                │
+                ▼
+       ┌─────────────────────┐
+       │       GATEWAY       │
+       │                     │
+       │ Auth                │
+       │ Rate Limit → Redis  │
+       │ Routing             │
+       │ Logging             │
+       └───────┬───────┬─────┘
+               │       │
+               ▼       ▼
+             User    Product
+               
+                 │
+                 ▼
+             PostgreSQL
+Final:       
 
                        API GATEWAY
                             │

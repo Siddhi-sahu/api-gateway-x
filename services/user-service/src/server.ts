@@ -14,21 +14,19 @@ app.get("/users", async(req, res) => {
         },
         {
         "id": 2,
-        "name": "Siddhi"
+        "name": "Siddhi",
+        "email": "abc@gmail.com"
         },
     ]
     };
 
     try{
-        console.log("hit users")
         return res.status(200).json(users);
 
     }catch(e){
         console.log(e)
 
     }
-    
-
 });
 
 // app.get("/users/:id", async(req, res) => {
