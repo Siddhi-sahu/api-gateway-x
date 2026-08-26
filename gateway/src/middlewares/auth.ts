@@ -32,11 +32,11 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
     };
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
         if (typeof decoded === 'string' || typeof decoded.userId !== 'string') {
             return res.status(401).json({ message: 'Invalid token' });
         }
-        req.userId = decoded.userId;
+        req.user = decoded;// Attach user info to the gateway request object
         next();
     } catch (err) {
         res.status(403).json({ message: 'Invalid token' });

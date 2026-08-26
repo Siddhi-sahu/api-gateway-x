@@ -1,11 +1,14 @@
 import axios from "axios";
 import type { Request, Response } from "express";
+import { AuthRequest } from "../types/index.js";
 
 const userServiceUrl = process.env.USER_SERVICE_URL;
 
 if (!userServiceUrl) {
     throw new Error("USER_SERVICE_URL is not defined");
 };
+
+//todo: inject user data into headers, Pass gateway verified identities downstream safely
 
 export async function getUserService(req: Request, res: Response){
     try{

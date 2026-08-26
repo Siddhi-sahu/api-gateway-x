@@ -64,6 +64,22 @@ Step 1:
           ▼            ▼
        User          Product
 
+Currently all auth in gateway, rather than auth as a separate service:
+
+       CLIENT                     API GATEWAY (:3000)                USER SERVICE(:3001)
+  │                                 │                                  │
+  │ 1. POST /api/auth/login ───────>│ (Checks Postgres, signs JWT)     │
+  │ <─── Returns JWT Token ─────────│                                  │
+  │                                 │                                  │
+  │ 2. GET /api/users (with JWT) ──>│ [Auth Middleware]                │
+  │                                 │  - Decodes & Verifies JWT        │
+  │                                 │  - Attaches X-User-Id header    │
+  │                                 │  - Proxies request ─────────────>│
+  │                                 │                                  │  (Reads X-User-Id,
+  │                                 │<─ Returns User Data ─────────────│   returns data)
+  │<──── Returns JSON Response ─────│                                  │
+
+
 Step 2: After redis:
 
              CLIENT
