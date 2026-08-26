@@ -1,0 +1,16 @@
+services:
+  gateway_db:
+    image: postgres:16-alpine
+    container_name: api_gateway_postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: api_gateway
+    ports:
+      - "5432:5432"
+    volumes:
+      - gateway_pgdata:/var/lib/postgresql/data
+
+volumes:
+  gateway_pgdata:
+

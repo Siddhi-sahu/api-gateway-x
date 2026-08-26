@@ -55,7 +55,7 @@ Step 1:
                 ▼
        ┌─────────────────┐
        │     GATEWAY     │
-       │                 │
+       │                 │ (Edge Auth Pattern)
        │ Authentication  │
        │                 │
        └────────┬────────┘
