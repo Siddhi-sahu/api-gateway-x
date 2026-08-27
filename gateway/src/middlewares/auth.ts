@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { AuthRequest } from '../types/index.js';
 
 
@@ -33,7 +33,10 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET) as any;
-        if (typeof decoded === 'string' || typeof decoded.userId !== 'string') {
+        if (typeof decoded === 'string' || typeof decoded.id !== 'string') {
+            console.log(decoded)
+            console.log(decoded.id);
+            console.log(token)
             return res.status(401).json({ message: 'Invalid token' });
         }
         req.user = decoded;// Attach user info to the gateway request object

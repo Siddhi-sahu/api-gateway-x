@@ -80,7 +80,27 @@ Currently all auth in gateway, rather than auth as a separate service:
   │<──── Returns JSON Response ─────│                                  │
 
 
-Step 2: After redis:
+
+Step 2: after postgresql:
+
+             CLIENT
+                │
+                ▼
+       ┌─────────────────────┐
+       │       GATEWAY       │
+       │                     │
+       │ Auth                │
+       │                     │
+       └───────┬───────┬─────┘
+               │       │
+               ▼       ▼
+             User    Product
+               
+                 │
+                 ▼
+             PostgreSQL
+             
+Step 3: After redis:
 
              CLIENT
                 │
@@ -98,26 +118,6 @@ Step 2: After redis:
              ▼          ▼
           User       Product
 
-Step 3: after postgresql:
-
-             CLIENT
-                │
-                ▼
-       ┌─────────────────────┐
-       │       GATEWAY       │
-       │                     │
-       │ Auth                │
-       │ Rate Limit → Redis  │
-       │ Routing             │
-       │ Logging             │
-       └───────┬───────┬─────┘
-               │       │
-               ▼       ▼
-             User    Product
-               
-                 │
-                 ▼
-             PostgreSQL
 Final:       
 
                        API GATEWAY

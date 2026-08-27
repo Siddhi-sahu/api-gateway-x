@@ -7,7 +7,7 @@ app.use(express.json())
 
 app.get("/products", async(req, res) => {
     const products = {
-        "users": [
+        "products": [
         {
         "id": 1,
         "name": "lip-gloss",
