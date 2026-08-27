@@ -6,12 +6,13 @@ import cors from "cors";
 import userRoutes from './routes/user.routes.js'
 import productRoutes from './routes/product.routes.js'
 import authRoutes from './routes/auth.routes.js'
-import { verifyToken } from "./middlewares/auth.js";
+import { ratelimiter } from "./middlewares/ratelimiter.js"
 
 const app = express()
 app.use(cors());
 app.use(express.json())
 
+app.use(ratelimiter);
 // 1. Auth endpoints managed directly by Gateway
 app.use("/api/auth", authRoutes);
 // 2. Proxied, Protected Route down to User Service
