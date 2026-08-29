@@ -21,7 +21,7 @@ export const ratelimiter = async(req: AuthRequest, res: Response, next: NextFunc
 
         //send headers back to client
         res.setHeader("rate-limit", REQUEST_LIMIT);
-        res.setHeader("Requests-remaining", REQUEST_LIMIT - currentRequests);
+        res.setHeader("Requests-remaining", Math.max(0,REQUEST_LIMIT - currentRequests));
         res.setHeader("Rate-limit-reset", ttl);
 
         if(currentRequests>REQUEST_LIMIT){

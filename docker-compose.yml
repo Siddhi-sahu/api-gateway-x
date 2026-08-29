@@ -10,6 +10,31 @@ services:
       - "5432:5432"
     volumes:
       - gateway_pgdata:/var/lib/postgresql/data
+
+  user_db:
+    image: postgres:16-alpine
+    container_name: services_user_postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users
+    ports:
+      - "5433:5432"
+    volumes:
+      - user_pgdata:/var/lib/postgresql/data
+
+  product_db:
+    image: postgres:16-alpine
+    container_name: product_service_postgres
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: products
+    ports:
+      - "5434:5432"
+    volumes:
+      - product_pgdata:/var/lib/postgresql/data
+
   gateway_cache:
     image: redis:7-alpine
     container_name: api_gateway_redis
@@ -18,4 +43,6 @@ services:
 
 volumes:
   gateway_pgdata:
+  user_pgdata:
+  product_pgdata:
 

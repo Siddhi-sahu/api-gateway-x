@@ -80,8 +80,7 @@ Currently all auth in gateway, rather than auth as a separate service:
   │<──── Returns JSON Response ─────│                                  │
 
 
-
-Step 2: after postgresql:
+# Authentication:
 
              CLIENT
                 │
@@ -99,6 +98,46 @@ Step 2: after postgresql:
                  │
                  ▼
              PostgreSQL
+
+iteration:
+
+             CURRENT
+               │
+               ▼
+               Fix service ownership
+               │
+               ▼
+               User Service gets its own DB
+               Product Service gets its own DB
+               │
+               ▼
+               Improve authentication architecture
+               │
+               ▼
+               Secure Gateway → Service communication
+               │
+               ▼
+               Reliability
+               │
+               ├── timeout
+               ├── retries
+               ├── idempotency
+               └── circuit breaker
+
+Revised architecture:
+
+                  GATEWAY
+                      │
+       ┌──────────────┼───────────────┐
+       │              │               │
+     Auth           Rate            Routing
+     proxy          limit             │
+       │              │          ┌────┴────┐
+       ▼              ▼          ▼         ▼
+ User Service      Redis       User     Product
+       │                         │          │
+       ▼                         ▼          ▼
+    User DB                     User DB.   Product DB
              
 Step 3: After redis:
 
