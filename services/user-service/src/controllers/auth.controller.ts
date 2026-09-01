@@ -30,7 +30,7 @@ export async function register(req: AuthRequest, res: Response){
         const newUser = result.rows[0];
         return res.status(201).json({
         message: "User successfully registered at Gateway level",
-        user: newUser
+        userId: newUser.id,
         });
         // const token = generateToken(userId);
         // if(!token){
