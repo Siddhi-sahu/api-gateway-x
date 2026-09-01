@@ -12,7 +12,9 @@ if (!userServiceUrl) {
 
 export async function getUserService(req: AuthRequest, res: Response){
     try{
-        console.log("hit")
+        console.log("gate hit")
+        console.log(userServiceUrl);
+        // const token = req.body.;
         const response = await axios.get(userServiceUrl!, {
         headers: {
             // 'Authorization': 'Bearer token',
@@ -23,11 +25,13 @@ export async function getUserService(req: AuthRequest, res: Response){
             // "X-User-Name": req.user?.name || ""
         }
         });
+        console.log("gate hit2")
+
         console.log(response.data);
         const data = response.data;
         return res.status(200).json(data);
     }catch(e){
-        return res.status(500).json({ error: "Downstream service errorm." });
+        return res.status(500).json({ error: e, msg: "Downstream service errorm." });
 
     } 
 }
@@ -41,7 +45,7 @@ export async function userRegister(req: AuthRequest, res: Response){
     };
     try{
         console.log("user register")
-        const response = await axios.post(userServiceUrl! + "/register",{
+        const response = await axios.post(userServiceUrl! + "/auth/register",{
             name,
             email,
             password
@@ -72,7 +76,10 @@ export async function userLogin(req: AuthRequest, res: Response){
         };
     try{
         console.log("hit")
-        const response = await axios.post(userServiceUrl! + "/login", {
+        const response = await axios.post(userServiceUrl! + "/auth/login", {
+            email,
+            password
+        }, {
         headers: {
             // 'Authorization': 'Bearer token',
             'Accept': 'application/json',

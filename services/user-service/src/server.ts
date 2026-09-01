@@ -8,15 +8,7 @@ const PORT = 3001
 app.use(express.json())
 
 app.use("/users", serviceRoutes);
-app.use("/auth", authRoutes);
-
-
-
-// app.get("/users/:id", async(req, res) => {
-//     const id = req.params.id;
-
-//     res.status(200).json({})
-// })
+app.use("/users/auth", authRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`)

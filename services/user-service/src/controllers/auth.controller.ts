@@ -29,7 +29,7 @@ export async function register(req: AuthRequest, res: Response){
         const result = await pool.query(queryText, [name, email, passwordHash]);
         const newUser = result.rows[0];
         return res.status(201).json({
-        message: "User successfully registered at Gateway level",
+        message: "User successfully registered.",
         userId: newUser.id,
         });
         // const token = generateToken(userId);
@@ -51,14 +51,20 @@ export async function register(req: AuthRequest, res: Response){
 
 export async function login(req: AuthRequest, res: Response){
     try{
+        console.log("hereee")
         const { email, password } = req.body;
+        console.log("hereee", email, password)
+
         if (!email || !password) {
             return res.status(400).json({ error: "Missing fields" });
         };
+        console.log("hereee")
+
         const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
         if (result.rows.length === 0) {
             return res.status(401).json({ error: "invalid credentials" });
         };
+        console.log("here2")
 
         const user = result.rows[0];
         const isMatch = await bcrypt.compare(password, user.password_hash);
