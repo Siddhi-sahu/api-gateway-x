@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "tsc",
-        "start": "npm run build && node dist/server.js",
+        "start": "npm run build && node --env-file=.env dist/server.js",
         "test": "echo \"\""
     },
     "keywords": [],

@@ -32,11 +32,6 @@ export async function register(req: AuthRequest, res: Response){
         message: "User successfully registered.",
         userId: newUser.id,
         });
-        // const token = generateToken(userId);
-        // if(!token){
-        //     return res.json({"msg": "no auth token found."});
-        // }
-
     }catch(error: any){
         if (error.code === '23505') {
         return res.status(400).json({ error: "Email already registered" });
