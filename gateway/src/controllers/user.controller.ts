@@ -3,29 +3,30 @@ import type { Response } from "express";
 import { AuthRequest } from "../types/index.js";
 
 const userServiceUrl = process.env.USER_SERVICE_URL;
+const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
+
 
 if (!userServiceUrl) {
     throw new Error("USER_SERVICE_URL is not defined");
 };
-
-//todo: inject user data into headers, 2.Pass gateway verified identities downstream safely
+if(!SERVICE_API_KEY){
+    throw new Error("SERVICE_API_KEY is not defined");        
+}
 
 export async function getUserService(req: AuthRequest, res: Response){
+    // const userId = req.user?.id;
+    // if(!userId)
+    console.log("userid:", req.user?.id);
+
     try{
-        console.log("gate hit")
-        console.log(userServiceUrl);
-        // const token = req.body.;
         const response = await axios.get(userServiceUrl!, {
         headers: {
             // 'Authorization': 'Bearer token',
             'Accept': 'application/json',
-            //2.
-            "X-User-Id": req.user?.id || "",
-            // "X-User-Email": req.user?.email || "",
-            // "X-User-Name": req.user?.name || ""
+            "X-Auth-User-Id": req.user?.id || "",
+            "X-Service-Key": SERVICE_API_KEY,
         }
         });
-        console.log("gate hit2")
 
         console.log(response.data);
         const data = response.data;

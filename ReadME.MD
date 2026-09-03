@@ -138,8 +138,38 @@ Revised architecture:
        │                         │          │
        ▼                         ▼          ▼
     User DB                     User DB.   Product DB
-             
-Step 3: After redis:
+
+trust service boundary for user service, iteration #2:
+
+                         CLIENT
+                            │
+                            │ JWT
+                            ▼
+                     ┌──────────────┐
+                     │   GATEWAY    │
+                     │              │
+                     │ Verify JWT   │
+                     │ Rate Limit   │
+                     │ Route        │
+                     └──────┬───────┘
+                            │
+                  X-Service-Key
+                  X-User-Id
+                            │
+                            ▼
+                     ┌──────────────┐
+                     │ USER SERVICE │
+                     │              │
+                     │ Verify       │
+                     │ Service Key  │
+                     │              │
+                     │ User Logic   │
+                     └──────┬───────┘
+                            │
+                            ▼
+                         USER DB
+
+After redis:
 
              CLIENT
                 │
@@ -179,3 +209,6 @@ Final:
                             │
                             ▼
                           Client
+
+TODO:
+1. middleware that validates the service key.
