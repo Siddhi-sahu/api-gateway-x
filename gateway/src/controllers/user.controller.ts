@@ -32,7 +32,8 @@ export async function getUserService(req: AuthRequest, res: Response){
         const data = response.data;
         return res.status(200).json(data);
     }catch(e){
-        return res.status(500).json({ error: e, msg: "Downstream service errorm." });
+        console.log(e);
+        return res.status(500).json({ error: e, msg: "Downstream user service error." });
 
     } 
 }

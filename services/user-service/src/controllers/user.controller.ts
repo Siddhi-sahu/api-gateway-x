@@ -8,10 +8,13 @@ if(!userServiceKey){
 }
 
 export async function getUsers(req: AuthRequest, res: Response){
+    //user id is trusted becuase we have jwt verification at gateway level
     const userId = req.headers["x-auth-user-id"];
     console.log(userId);
-    const serviceKey = req.headers["x-service-Key"];
+    const serviceKey = req.headers["x-service-key"];
+    console.log("service",serviceKey);
 
+    //this is failing
     if(!serviceKey || serviceKey !== userServiceKey){
         return res.status(401).json({
         message: "Invalid service credentials or missing headersss."
@@ -21,7 +24,7 @@ export async function getUsers(req: AuthRequest, res: Response){
     try{
         const queryText = 'SELECT * FROM users'
         const result = await pool.query(queryText);
-        console.log(result);
+        console.log(result.rows);
 
         return res.status(200).json(result.rows);
 
