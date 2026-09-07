@@ -211,5 +211,6 @@ Final:
                           Client
 
 TODO:
-1. middleware that validates the service key.
+1. middleware that validates the service key.✅
 2. Relability - timeouts
+3. remove code/package duplication (eg. middleware in both user and product service.)

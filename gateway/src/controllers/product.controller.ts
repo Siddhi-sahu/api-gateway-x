@@ -15,6 +15,7 @@ export async function getProductService(req: Request, res: Response){
         return res.status(200).json(response.data);
     }catch(e){
         console.log(e);
+        return res.status(500).json({ error: e, msg: "Downstream product service error." });
     } 
 }
 
@@ -31,5 +32,6 @@ export async function addProductService(req: Request, res: Response){
         return res.status(200).json(response.data);
     }catch(e){
         console.log(e);
+        return res.status(500).json({ error: e, msg: "Downstream user service error." });
     } 
 }

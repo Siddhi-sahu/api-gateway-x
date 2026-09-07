@@ -3,6 +3,7 @@ import redisClient from "../config/redis.js";
 import { AuthRequest } from "../types/index.js";
 
 //allow 10 re/min
+//fixed window counter
 const REQUEST_LIMIT = 10;
 const WINDOW_SIZE_IN_SECONDS = 60;
 

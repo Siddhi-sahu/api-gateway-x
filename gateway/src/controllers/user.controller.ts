@@ -14,8 +14,6 @@ if(!SERVICE_API_KEY){
 }
 
 export async function getUserService(req: AuthRequest, res: Response){
-    // const userId = req.user?.id;
-    // if(!userId)
     console.log("userid:", req.user?.id);
 
     try{
