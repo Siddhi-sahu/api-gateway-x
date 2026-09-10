@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { Response } from "express";
 import { AuthRequest } from "../types/index.js";
+import { retry } from "../utils/retry.js";
 
 const userServiceUrl = process.env.USER_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -17,21 +18,40 @@ export async function getUserService(req: AuthRequest, res: Response){
     console.log("userid:", req.user?.id);
 
     try{
-        const response = await axios.get(userServiceUrl!, {
-        headers: {
-            // 'Authorization': 'Bearer token',
-            'Accept': 'application/json',
-            "X-Auth-User-Id": req.user?.id || "",
-            "X-Service-Key": SERVICE_API_KEY,
-        }
-        });
+        const response = await retry(()=>axios.get(userServiceUrl!, {   
+            timeout: 3000,
+            headers: {
+                // 'Authorization': 'Bearer token',
+                'Accept': 'application/json',
+                "X-Auth-User-Id": req.user?.id || "",
+                "X-Service-Key": SERVICE_API_KEY,
+            }
+        }));
 
         console.log(response.data);
         const data = response.data;
         return res.status(200).json(data);
     }catch(e){
+        //extract errors from downsttream
+        if(axios.isAxiosError(e)){
+            console.log("Downstream user service status: ", e.response?.status);
+            console.log("Downstream user service data: ", e.response?.data);
+
+        if (
+            e.code === "ECONNABORTED" ||
+            e.code === "ETIMEDOUT"
+        ) {
+            return res.status(504).json({
+                error: "User service timed out"
+            });
+        }
+
+            //send better to client
+            return res.status(502).json({ error: "User service unavailable" });
+        }
+        //later when we have gateway logic; clear distinction of errors.
         console.log(e);
-        return res.status(500).json({ error: e, msg: "Downstream user service error." });
+        return res.status(500).json({ error : " Gateway error"})
 
     } 
 }

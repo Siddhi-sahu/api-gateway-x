@@ -212,5 +212,10 @@ Final:
 
 TODO:
 1. middleware that validates the service key.✅
-2. Relability - timeouts
+2. Relability - 1. timeouts
+                2. error propagation/translation
+                3. retry
+                4. exponential backoff
+                5. circuit breaker
+                6. idempotency
 3. remove code/package duplication (eg. middleware in both user and product service.)
