@@ -2,6 +2,7 @@ import axios from "axios";
 import type { Response } from "express";
 import { AuthRequest } from "../types/index.js";
 import { retry } from "../utils/retry.js";
+import { userServiceCircuitBreaker } from "../utils/circuitBreaker.js";
 
 const userServiceUrl = process.env.USER_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -18,7 +19,7 @@ export async function getUserService(req: AuthRequest, res: Response){
     console.log("userid:", req.user?.id);
 
     try{
-        const response = await retry(()=>axios.get(userServiceUrl!, {   
+        const response = await userServiceCircuitBreaker.execute(()=>retry(()=>axios.get(userServiceUrl!, {   
             timeout: 3000,
             headers: {
                 // 'Authorization': 'Bearer token',
@@ -26,12 +27,16 @@ export async function getUserService(req: AuthRequest, res: Response){
                 "X-Auth-User-Id": req.user?.id || "",
                 "X-Service-Key": SERVICE_API_KEY,
             }
-        }));
+        }))); 
 
         console.log(response.data);
         const data = response.data;
         return res.status(200).json(data);
     }catch(e){
+
+        // Circuit is open
+        if(){}
+
         //extract errors from downsttream
         if(axios.isAxiosError(e)){
             console.log("Downstream user service status: ", e.response?.status);

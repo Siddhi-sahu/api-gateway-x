@@ -13,11 +13,20 @@ export async function getUsers(req: AuthRequest, res: Response){
     console.log(userId);
 
     try{
+        // await new Promise(resolve =>
+        //     setTimeout(resolve, 5000)
+        // );
+
         const queryText = 'SELECT * FROM users'
         const result = await pool.query(queryText);
         console.log(result.rows);
 
-        return res.status(200).json(result.rows);
+        // return res.status(200).json(result.rows);
+        return res.status(503).json({
+            error: "Service temporarily unavailable"
+        });
+
+
 
     }catch(e){
         console.log(e);

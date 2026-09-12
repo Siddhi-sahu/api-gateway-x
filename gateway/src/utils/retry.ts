@@ -27,7 +27,7 @@ function isErrorRetryable(error: unknown){
     return status === 502 || status === 503 || status === 504; 
 }
 
-export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3){
+export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3): Promise<T>{
 
     try{
         return await operation();
