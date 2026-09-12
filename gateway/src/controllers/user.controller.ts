@@ -8,6 +8,7 @@ const userServiceUrl = process.env.USER_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
 
 
+
 if (!userServiceUrl) {
     throw new Error("USER_SERVICE_URL is not defined");
 };
@@ -34,8 +35,12 @@ export async function getUserService(req: AuthRequest, res: Response){
         return res.status(200).json(data);
     }catch(e){
 
-        // Circuit is open
-        if(){}
+        // Circuit is open; fourth req failure this is triggered
+        if(e instanceof Error && e.message ==="CIRCUIT_OPEN"){
+            return res.status(503).json({
+                error: "User service temporarily unavailable"
+            })
+        }
 
         //extract errors from downsttream
         if(axios.isAxiosError(e)){
@@ -51,7 +56,7 @@ export async function getUserService(req: AuthRequest, res: Response){
             });
         }
 
-            //send better to client
+            //3 times request failure this is trigerred 
             return res.status(502).json({ error: "User service unavailable" });
         }
         //later when we have gateway logic; clear distinction of errors.

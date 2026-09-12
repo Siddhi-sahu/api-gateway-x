@@ -210,6 +210,33 @@ Final:
                             ▼
                           Client
 
+# Retry And Circuit Breaker:
+                         Gateway
+                            │
+                            ▼
+                   Circuit Breaker
+                            │
+                       CLOSED?
+                       /      \
+                     yes       no
+                      │         │
+                      ▼         ▼
+                    Retry    503 immediately
+                      │
+                ┌─────┴─────┐
+                │           │
+             Axios       failure
+                │           │
+           timeout=3s       │
+                │           │
+                ▼           ▼
+           User Service   retry?
+                            │
+                       yes → backoff
+                            │
+                            ▼
+                         Axios again
+
 TODO:
 1. middleware that validates the service key.✅
 2. Relability - 1. timeouts
@@ -219,3 +246,5 @@ TODO:
                 5. circuit breaker
                 6. idempotency
 3. remove code/package duplication (eg. middleware in both user and product service.)
+4. implement retry and circuit logic across all relevant routes
+5. add configuration for numbers scattered through the code base.

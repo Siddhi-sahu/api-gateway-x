@@ -1,3 +1,13 @@
+// const USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD= process.env.USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD;
+// const USER_SERVICE_CIRCUIT_RESET_MS = process.env.USER_SERVICE_CIRCUIT_RESET_MS;
+
+
+// if (!USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD) {
+//     throw new Error("USER_SERVICE_URL is not defined");
+// };
+// if(!USER_SERVICE_CIRCUIT_RESET_MS){
+//     throw new Error("SERVICE_API_KEY is not defined");        
+// }
 export class CircuitBreaker {
     private failures = 0;
     private state: "CLOSED" | "OPEN" | "HALF_OPEN" = "CLOSED";
