@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const sleep = async(ms: number)=>{
-    new Promise(resolve => setTimeout(() => resolve, ms));
+    return new Promise(resolve => setTimeout(() => resolve, ms));
 }
 
 
@@ -28,32 +28,32 @@ function isErrorRetryable(error: unknown){
 }
 
 export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3): Promise<T>{
-
-    try{
-        return await operation();
-    }catch(error){
         for(let i=1; i<=maxAttempts; i++){
-        const retryable = isErrorRetryable(error);
 
-        if(!retryable){
-            throw error;
-        }
+            try{
+                return await operation();
+            }
+            catch(error){
+                const retryable = isErrorRetryable(error);
 
-        //if this atttempt is the last
-        if(i == maxAttempts){
-            throw error;
-        };
-        const delay = 100 * Math.pow(2, i-1); //100ms, 200ms, 400ms exponential backoff simple
+                if(!retryable){
+                    throw error;
+                }
 
-        console.log(
-                `Request failed. Retrying in ${delay}ms..` +
-                `(attempt ${i + 1}/${maxAttempts})`
-        );
+                //if this atttempt is the last
+                if(i == maxAttempts){
+                    throw error;
+                };
+                const delay = 100 * Math.pow(2, i-1); //100ms, 200ms, 400ms exponential backoff simple
 
+                console.log(
+                        `Request failed. Retrying in ${delay}ms..` +
+                        `(attempt ${i + 1}/${maxAttempts})`
+                );
 
-        await sleep(delay);
+                await sleep(delay);
 
-    }
+            }
 
     }
 
