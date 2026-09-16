@@ -9,16 +9,11 @@ if(!ServiceKey){
 export const serviceKeyMiddleware = async(req: AuthRequest, res: Response, next: NextFunction) =>{
     try{
         const serviceKey = req.headers["x-service-key"];
-    // console.log("Service key type: ", typeof serviceKey);
-    // console.log(serviceKey);
     if(!serviceKey || serviceKey !== ServiceKey){
         return res.status(401).json({
         message: "Invalid service credentials or missing headersss."
     });
     }
-    //attach service key to req?
-
-    // req.serviceKey = serviceKey;
     next();
 
     }catch(e){

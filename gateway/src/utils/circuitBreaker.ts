@@ -68,3 +68,4 @@ export class CircuitBreaker {
 };
 
 export const userServiceCircuitBreaker = new CircuitBreaker(3, 10_000);
+export const productServiceCircuitBreaker = new CircuitBreaker(3, 10_000);
