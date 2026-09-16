@@ -2,17 +2,17 @@ import type { Response } from "express";
 import { AuthRequest } from "../types/index.js";
 import { pool } from "../config/database.js";
 
-const userServiceKey = process.env.SERVICE_API_KEY;
-if(!userServiceKey){
-    throw new Error("SERVICE_API_KEY is not defined");  
-}
-
 export async function getUsers(req: AuthRequest, res: Response){
     //user id is trusted becuase we have jwt verification at gateway level
     const userId = req.headers["x-auth-user-id"];
     console.log(userId);
+    console.log("User Service received request");
 
     try{
+        await new Promise(resolve =>
+            setTimeout(resolve, 4000)
+        );
+
         const queryText = 'SELECT * FROM users'
         const result = await pool.query(queryText);
         console.log(result.rows);

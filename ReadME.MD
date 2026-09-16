@@ -237,15 +237,165 @@ Final:
                             ▼
                          Axios again
 
+# error flow 
+## for normal req:
+
+Client
+ ↓
+Gateway
+ ↓
+Circuit Breaker
+ ↓
+Retry
+ ↓
+Axios
+ ↓
+User Service
+ ↓
+PostgreSQL
+ ↓
+User Service 200
+ ↓
+Axios resolves
+ ↓
+Retry returns
+ ↓
+Circuit Breaker records success
+ ↓
+Gateway
+ ↓
+Client
+
+## 404
+Client
+ ↓
+Gateway
+ ↓
+Circuit Breaker
+ ↓
+Retry
+ ↓
+Axios
+ ↓
+User Service
+ ↓
+404 response
+ ↓
+Axios rejects
+ ↓
+Retry asks:
+"retryable?"
+ ↓
+NO
+ ↓
+throw
+ ↓
+Circuit Breaker
+ ↓
+Gateway catch
+ ↓
+Client
+
+## 503
+
+Client
+ ↓
+Gateway
+ ↓
+Circuit Breaker
+ ↓
+Retry
+ ↓
+Axios
+ ↓
+User Service
+ ↓
+503
+ ↓
+Axios rejects
+ ↓
+Retry asks:
+"retryable?"
+ ↓
+YES
+ ↓
+wait 100ms
+ ↓
+Axios again
+ ↓
+503
+ ↓
+wait 200ms
+ ↓
+Axios again
+ ↓
+503
+ ↓
+throw
+ ↓
+Circuit Breaker records ONE failure
+ ↓
+Gateway catch
+ ↓
+502/503
+ ↓
+Client
+
+## user service timed out:
+Client
+ ↓
+Gateway
+ ↓
+Circuit Breaker
+ ↓
+Retry
+ ↓
+Axios
+ ↓
+User Service
+ ↓
+doesn't respond in 3 sec
+ ↓
+Axios throws timeout error
+ ↓
+NO HTTP response exists
+ ↓
+e.response === undefined
+ ↓
+Retry sees ECONNABORTED
+ ↓
+YES, retry
+ ↓
+Axios again
+ ↓
+timeout
+ ↓
+retry
+ ↓
+Axios again
+ ↓
+timeout
+ ↓
+throw
+ ↓
+Circuit Breaker records ONE failure
+ ↓
+Gateway catch
+ ↓
+504
+ ↓
+Client
+
 TODO:
 1. middleware that validates the service key.✅
-2. Relability - 1. timeouts
-                2. error propagation/translation
-                3. retry
-                4. exponential backoff
-                5. circuit breaker
+2. Relability - 1. timeouts✅
+                2. error propagation/translation✅
+                3. retry✅
+                4. exponential backoff✅
+                5. circuit breaker✅
                 6. idempotency
 3. remove code/package duplication (eg. middleware in both user and product service.)
 4. implement retry and circuit logic across all relevant routes
 5. add configuration for numbers scattered through the code base.
 6. fix retry
+7. test retry/circuit breaker again.
