@@ -12,8 +12,10 @@ function isErrorRetryable(error: unknown){
         return false;
     }
 
+    console.log("error code:", error.code);
+
     //error from timeout
-    if(error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT'){
+    if(error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT' || error.code === 'ECONNREFUSED'){
         return true;
     }
 

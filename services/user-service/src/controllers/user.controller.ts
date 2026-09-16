@@ -9,10 +9,6 @@ export async function getUsers(req: AuthRequest, res: Response){
     console.log("User Service received request");
 
     try{
-        await new Promise(resolve =>
-            setTimeout(resolve, 4000)
-        );
-
         const queryText = 'SELECT * FROM users'
         const result = await pool.query(queryText);
         console.log(result.rows);
