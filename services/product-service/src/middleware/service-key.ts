@@ -10,6 +10,7 @@ export const serviceKeyMiddleware = async(req: AuthRequest, res: Response, next:
     try{
         const serviceKey = req.headers["x-service-key"];
     if(!serviceKey || serviceKey !== ServiceKey){
+        console.log("this hit");
         return res.status(401).json({
         message: "Invalid service credentials or missing headersss."
     });

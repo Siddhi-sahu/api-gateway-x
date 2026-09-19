@@ -386,6 +386,29 @@ Gateway catch
  ↓
 Client
 
+Relaiabilty Layer:
+                    API Gateway
+                        │
+        ┌───────────────┼────────────────┐
+        │               │                │
+ Authentication     Rate Limiting     Routing
+        │               │                │
+        └───────────────┼────────────────┘
+                        │
+                 Reliability
+              ┌─────────┼─────────┐
+              │         │         │
+           Timeout    Retry    Circuit
+              │         │       Breaker
+              └─────────┼─────────┘
+                        │
+                    Services
+                 ┌──────┴──────┐
+                 │             │
+             User Service  Product Service
+                 │             │
+              User DB       Product DB
+
 TODO:
 1. middleware that validates the service key.✅
 2. Relability - 1. timeouts✅
@@ -395,7 +418,7 @@ TODO:
                 5. circuit breaker✅
                 6. idempotency
 3. remove code/package duplication (eg. middleware in both user and product service.)
-4. implement retry and circuit logic across all relevant routes
+4. implement retry and circuit logic across all relevant routes✅
 5. add configuration for numbers scattered through the code base.
-6. fix retry
-7. test retry/circuit breaker again.
+6. fix retry✅
+7. test retry/circuit breaker again.✅

@@ -43,11 +43,16 @@ export async function addProductService(req: Request, res: Response){
         const response = await axios.post(productServiceUrl!,{
             name, 
             price
+        },{
+            timeout: 3000,
+            headers: {
+                "X-Service-Key": SERVICE_API_KEY,
+            }
         });
         console.log(response.data);
         return res.status(200).json(response.data);
     }catch(e){
         console.log(e);
-        return res.status(500).json({ error: e, msg: "Downstream user service error." });
+        return res.status(500).json({ error: e, msg: "Downstream Product service error. " });
     } 
 }
