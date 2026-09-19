@@ -3,12 +3,10 @@ import { pool } from "../config/database.js";
 
 
 export async function getProducts(req: Request, res: Response){
-    console.log("iluilu")
     try{
-        console.log("product hit")
+        console.log("queried database")
         const queryText = 'SELECT * FROM products'
         const result = await pool.query(queryText);
-        console.log(result.rows);
 
         return res.status(200).json(result.rows);
 

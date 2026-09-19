@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import { AuthRequest } from "../types/index.js";
 import { retry } from "../utils/retry.js";
 import { productServiceCircuitBreaker } from "../utils/circuitBreaker.js";
+import redisClient from "../config/redis.js";
 
 const productServiceUrl = process.env.PRODUCT_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -16,8 +17,21 @@ if(!SERVICE_API_KEY){
 }
 
 export async function getProductService(req: AuthRequest, res: Response){
+    const redisCacheKey = `cache:products:all`;
     try{
-        console.log("hit product....")
+        //cache hit logic
+        const cached = await redisClient.get(redisCacheKey);
+
+        if(cached){
+            console.log("cache hit")
+            return res.status(200).json({
+                source: "cache",
+                data: JSON.parse(cached)
+            })
+        };
+
+        console.log("cachee missed");
+
         const response = await productServiceCircuitBreaker.execute(()=>retry(()=>axios.get(productServiceUrl!,{   
             timeout: 3000,
             headers: {
@@ -27,7 +41,8 @@ export async function getProductService(req: AuthRequest, res: Response){
                 "X-Service-Key": SERVICE_API_KEY,
             }
         }))); 
-        console.log(response.data);
+        await redisClient.set(redisCacheKey, JSON.stringify(response.data), { EX: 60 });
+
         return res.status(200).json(response.data);
     }catch(e){
         // console.log(e);
