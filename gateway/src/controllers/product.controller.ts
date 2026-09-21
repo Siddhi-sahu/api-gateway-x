@@ -17,11 +17,15 @@ if(!SERVICE_API_KEY){
 }
 
 export async function getProductService(req: AuthRequest, res: Response){
+    console.log("hw")
     const redisCacheKey = `cache:products:all`;
     try{
-        //cache hit logic
-        const cached = await redisClient.get(redisCacheKey);
-
+        let cached: string | null = null;
+        try{
+            cached = await redisClient.get(redisCacheKey);
+        }catch(e){
+            console.error("cache reading from redis failed", e);
+        }
         if(cached){
             console.log("cache hit")
             return res.status(200).json({
@@ -41,7 +45,11 @@ export async function getProductService(req: AuthRequest, res: Response){
                 "X-Service-Key": SERVICE_API_KEY,
             }
         }))); 
-        await redisClient.set(redisCacheKey, JSON.stringify(response.data), { EX: 60 });
+        try{
+            await redisClient.set(redisCacheKey, JSON.stringify(response.data), { EX: 60 });
+        }catch(e){
+            console.error("redis cache write failed", e);
+        }
 
         return res.status(200).json(response.data);
     }catch(e){

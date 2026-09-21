@@ -409,6 +409,60 @@ Relaiabilty Layer:
                  │             │
               User DB       Product DB
 
+
+revised: caching:
+
+                 API-GATEWAY-X
+                       │
+                       ▼
+              ┌─────────────────┐
+              │   CORE DONE     │
+              ├─────────────────┤
+              │ Routing         │
+              │ JWT Auth        │
+              │ Service Auth    │
+              │ Rate Limiting   │
+              │ Separate DBs    │
+              │ Reliability     │
+              └────────┬────────┘
+                       │
+                       ▼
+                ┌─────────────┐
+                │   CACHING   │ 
+                └──────┬──────┘
+                       │
+                       ▼
+              ┌──────────────────┐
+              │  OBSERVABILITY   │
+              ├──────────────────┤
+              │ Logs             │
+              │ Request IDs      │
+              │ Latency          │
+              │ Metrics          │
+              └────────┬─────────┘
+                       │
+                       ▼
+                ┌─────────────┐
+                │   TESTING   │
+                └──────┬──────┘
+                       │
+                       ▼
+               ┌──────────────┐
+               │ LOAD TESTING │
+               └──────┬───────┘
+                      │
+                      ▼
+               ┌──────────────┐
+               │   FRONTEND   │
+               │   DASHBOARD  │
+               └──────┬───────┘
+                      │
+                      ▼
+              ┌────────────────┐
+              │ DOCKER + DEPLOY│
+              └───────┬────────
+                
+
 TODO:
 1. middleware that validates the service key.✅
 2. Relability - 1. timeouts✅
@@ -422,3 +476,5 @@ TODO:
 5. add configuration for numbers scattered through the code base.
 6. fix retry✅
 7. test retry/circuit breaker again.✅
+8. cache invalidation
+9. Cache failure shouldn't kill the API - test redis shut off
