@@ -478,3 +478,4 @@ TODO:
 7. test retry/circuit breaker again.✅
 8. cache invalidation
 9. Cache failure shouldn't kill the API - test redis shut off
+10. Add relevant structured logs

@@ -3,6 +3,7 @@ import type { Response } from "express";
 import { AuthRequest } from "../types/auth.js";
 import { retry } from "../utils/retry.js";
 import { userServiceCircuitBreaker } from "../utils/circuitBreaker.js";
+import { logger } from "../utils/logger.js";
 
 const userServiceUrl = process.env.USER_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -17,7 +18,10 @@ if(!SERVICE_API_KEY){
 }
 
 export async function getUserService(req: AuthRequest, res: Response){
-    console.log("userid:", req.user?.id);
+    logger.info("get_users_query_started", {
+    requestId: req.requestId
+    });
+    const getUsersStart = Date.now();
 
     try{
         const response = await userServiceCircuitBreaker.execute(()=>retry(()=>axios.get(userServiceUrl!, {   
@@ -27,11 +31,21 @@ export async function getUserService(req: AuthRequest, res: Response){
                 'Accept': 'application/json',
                 "X-Auth-User-Id": req.user?.id || "",
                 "X-Service-Key": SERVICE_API_KEY,
+                "X-Request-Id": req.requestId
             }
-        }))); 
+        }), 3, {requestId: req.requestId, service: "user-service"})); 
 
-        console.log(response.data);
         const data = response.data;
+        const getUsersDuration = Date.now() - getUsersStart;
+
+        
+        logger.info("get_users_query_completed", {
+            requestId: req.requestId,
+            usersCount: data.length,
+            service: "user-service",
+            durationMs: getUsersDuration,
+            statusCode: response.status
+        });
         return res.status(200).json(data);
     }catch(e){
 
@@ -73,6 +87,8 @@ export async function userRegister(req: AuthRequest, res: Response){
         if (!name || !email || !password) {
         return res.status(400).json({ error: "Missing required fields" });
     };
+    console.log(name, email, password);
+
     try{
         console.log("user register")
         const response = await axios.post(userServiceUrl! + "/auth/register",{
@@ -83,10 +99,10 @@ export async function userRegister(req: AuthRequest, res: Response){
         headers: {
             // 'Authorization': 'Bearer token',
             'Accept': 'application/json',
-            //2.
+            "X-Service-Key": SERVICE_API_KEY,
             // "X-User-Id": req.user?.id || "",
             // "X-User-Email": req.user?.email || "",
-            // "X-User-Name": req.user?.name || ""
+            
         }
         });
         console.log(response.data);
@@ -113,10 +129,9 @@ export async function userLogin(req: AuthRequest, res: Response){
         headers: {
             // 'Authorization': 'Bearer token',
             'Accept': 'application/json',
-            //2.
+            "X-Service-Key": SERVICE_API_KEY,
             // "X-User-Id": req.user?.id || "",
             // "X-User-Email": req.user?.email || "",
-            // "X-User-Name": req.user?.name || ""
         }
         });
         console.log(response.data);

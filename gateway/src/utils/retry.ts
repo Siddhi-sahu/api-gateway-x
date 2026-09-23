@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logger } from "./logger.js";
 
 const sleep = async(ms: number)=>{
     console.log("first")
@@ -30,10 +31,8 @@ function isErrorRetryable(error: unknown){
     return status === 502 || status === 503 || status === 504; 
 }
 
-export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3): Promise<T>{
+export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3, context?: {requestId?: string; service?: string}): Promise<T>{
         for(let i=1; i<=maxAttempts; i++){
-            console.log("i: ", i);
-
             try{
                 return await operation();
             }
@@ -50,10 +49,13 @@ export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3): Pr
                 };
                 const delay = 100 * Math.pow(2, i-1); //100ms, 200ms, 400ms exponential backoff simple
 
-                console.log(
-                        `Request failed. Retrying in ${delay}ms..` +
-                        `(attempt ${i + 1}/${maxAttempts})`
-                );
+                logger.warn("downstream_retry", {
+                    requestId: context?.requestId,
+                    service: context?.service,
+                    attempt: i + 1,
+                    maxAttempts,
+                    delayMs: delay
+                });
 
                 await sleep(delay);
 

@@ -11,7 +11,6 @@ export async function getUsers(req: AuthRequest, res: Response){
     try{
         const queryText = 'SELECT * FROM users'
         const result = await pool.query(queryText);
-        console.log(result.rows);
 
         return res.status(200).json(result.rows);
     }catch(e){
