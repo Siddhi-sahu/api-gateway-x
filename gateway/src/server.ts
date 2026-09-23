@@ -7,12 +7,16 @@ import userRoutes from './routes/user.routes.js'
 import productRoutes from './routes/product.routes.js'
 import { ratelimiter } from "./middlewares/ratelimiter.js"
 import authUserRoutes from './routes/auth.user.routes.js'
+import { requestId } from "./middlewares/requestId.js";
+import { requestLogger } from "./middlewares/requestLogger.js";
 
 const app = express()
 app.use(cors());
 app.use(express.json())
 
 app.use(ratelimiter);
+app.use(requestId);
+app.use(requestLogger)
 
 app.use("/api/auth", authUserRoutes);
 // 2. Proxied, Protected Route down to User Service
