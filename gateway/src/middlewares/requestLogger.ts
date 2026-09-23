@@ -1,6 +1,10 @@
-import { NextFunction } from "express";
-import { AuthRequest } from "../types/index.js";
+import { NextFunction, Response, Request } from "express";
 
 
-export function requestLogger(req: AuthRequest, res: Response, next: NextFunction){
+export function requestLogger(req: Request, res: Response, next: NextFunction){
+    const start = Date.now();
+    res.on("finish", () => {
+        const duration = Date.now() - start;
+        logger
+    })
 }

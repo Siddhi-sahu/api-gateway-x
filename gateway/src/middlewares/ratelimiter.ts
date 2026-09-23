@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from "express";
 import redisClient from "../config/redis.js";
-import { AuthRequest } from "../types/index.js";
+import { AuthRequest } from "../types/auth.js";
 
 //allow 10 re/min
 //fixed window counter

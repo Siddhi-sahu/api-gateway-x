@@ -1,16 +1,13 @@
-import { Request, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
+import { randomUUID } from "crypto";
 
-interface NRequest extends Request {
-    requestId: string;
-}
-
-export function requestId(req: NRequest, next: NextFunction){
-        const randomId = "randomIdLogic";
+export function requestId(req: Request, res: Response, next: NextFunction){
         const id = typeof req.headers["x-request-id"] === "string"
-            ? req.headers["x-request-id"] : randomId;
+            ? req.headers["x-request-id"] : randomUUID();
 
 
         req.requestId = id;
+        res.setHeader("X-Request-Id", id);
 
         next();
 }

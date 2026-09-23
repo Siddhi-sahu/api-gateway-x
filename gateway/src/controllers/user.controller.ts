@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Response } from "express";
-import { AuthRequest } from "../types/index.js";
+import { AuthRequest } from "../types/auth.js";
 import { retry } from "../utils/retry.js";
 import { userServiceCircuitBreaker } from "../utils/circuitBreaker.js";
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 import type { Request, Response } from "express";
-import { AuthRequest } from "../types/index.js";
+import { AuthRequest } from "../types/auth.js";
 import { retry } from "../utils/retry.js";
 import { productServiceCircuitBreaker } from "../utils/circuitBreaker.js";
 import redisClient from "../config/redis.js";
