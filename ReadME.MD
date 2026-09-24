@@ -463,6 +463,47 @@ revised: caching:
               └───────┬────────
                 
 
+metrics/metrics in db:
+                         Client
+                           │
+                           │ request
+                           ▼
+                    ┌──────────────┐
+                    │   Gateway    │
+                    │              │
+                    │ Request ID   │
+                    │ Auth         │
+                    │ Rate Limit   │
+                    │ Cache        │
+                    │ Reliability  │
+                    └──────┬───────┘
+                           │
+                   X-Request-Id
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │User/Product  │
+                    │   Service    │
+                    └──────┬───────┘
+                           │
+                           ▼
+                         DB
+
+
+              ┌──────────────────────────┐
+              │       OBSERVABILITY      │
+              ├──────────────────────────┤
+              │ Structured logs           │
+              │ Request IDs               │
+              │ Request duration          │
+              │ Downstream duration       │
+              │ Cache hit/miss             │
+              │ Retry events              │
+              │ Circuit events             │
+              │ Rate-limit events         │
+              │ Basic metrics             │
+              └──────────────────────────┘
+
 TODO:
 1. middleware that validates the service key.✅
 2. Relability - 1. timeouts✅
@@ -480,3 +521,4 @@ TODO:
 9. Cache failure shouldn't kill the API - test redis shut off
 10. Add relevant structured logs
 11. persist metrics in db
+12. add Prometheus
