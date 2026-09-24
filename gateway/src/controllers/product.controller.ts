@@ -5,6 +5,7 @@ import { retry } from "../utils/retry.js";
 import { productServiceCircuitBreaker } from "../utils/circuitBreaker.js";
 import redisClient from "../config/redis.js";
 import { logger } from "../utils/logger.js";
+import { metrics } from "../utils/metrics.js";
 
 const productServiceUrl = process.env.PRODUCT_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -33,7 +34,7 @@ export async function getProductService(req: AuthRequest, res: Response){
             });
         }
         if(cached){
-            console.log("cache hit")
+            metrics.cacheHits++;
             logger.info("cache_hit_get_products", {
                 requestId: req.requestId,
                 key: redisCacheKey
@@ -44,7 +45,7 @@ export async function getProductService(req: AuthRequest, res: Response){
             })
         };
 
-        console.log("cachee missed");
+        metrics.cacheMisses++;
         logger.info("cache_miss_get_products", {
             requestId: req.requestId,
             key: redisCacheKey

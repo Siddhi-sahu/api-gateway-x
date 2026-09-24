@@ -1,5 +1,6 @@
 import axios from "axios";
 import { logger } from "./logger.js";
+import { metrics } from "./metrics.js";
 
 const sleep = async(ms: number)=>{
     console.log("first")
@@ -33,6 +34,7 @@ function isErrorRetryable(error: unknown){
 
 export async function retry<T>(operation: () => Promise<T>, maxAttempts = 3, context?: {requestId?: string; service?: string}): Promise<T>{
         for(let i=1; i<=maxAttempts; i++){
+            metrics.retries++;
             try{
                 return await operation();
             }

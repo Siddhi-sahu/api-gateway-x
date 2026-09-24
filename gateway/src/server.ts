@@ -9,6 +9,7 @@ import { ratelimiter } from "./middlewares/ratelimiter.js"
 import authUserRoutes from './routes/auth.user.routes.js'
 import { requestId } from "./middlewares/requestId.js";
 import { requestLogger } from "./middlewares/requestLogger.js";
+import { metrics } from "./utils/metrics.js";
 
 const app = express()
 app.use(cors());
@@ -23,6 +24,9 @@ app.use("/api/auth", authUserRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 
+app.get("/metrics", (_req, res) => {
+    res.json(metrics);
+});
 
 const PORT = process.env.PORT || 3000;
 

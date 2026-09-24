@@ -1,6 +1,8 @@
 import type { Response, NextFunction } from "express";
 import redisClient from "../config/redis.js";
 import { AuthRequest } from "../types/auth.js";
+import { logger } from "../utils/logger.js";
+import { metrics } from "../utils/metrics.js";
 
 //allow 10 re/min
 //fixed window counter
@@ -26,6 +28,12 @@ export const ratelimiter = async(req: AuthRequest, res: Response, next: NextFunc
         res.setHeader("Rate-limit-reset", ttl);
 
         if(currentRequests>REQUEST_LIMIT){
+            metrics.rateLimitRejected++;
+            logger.warn("rate_limit_exceeded", {
+                requestId: req.requestId,
+                ip: req.ip
+            });
+
             return res.status(429).json({
                 error: "Too many requests",
                 msg: `You have exceeded your req quota. Try again in ${ttl}sec`
