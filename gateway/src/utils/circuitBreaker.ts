@@ -1,6 +1,8 @@
 // const USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD= process.env.USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD;
 // const USER_SERVICE_CIRCUIT_RESET_MS = process.env.USER_SERVICE_CIRCUIT_RESET_MS;
 
+import { logger } from "./logger.js";
+
 
 // if (!USER_SERVICE_CIRCUIT_FAILURE_THRESHOLD) {
 //     throw new Error("USER_SERVICE_URL is not defined");
@@ -34,6 +36,7 @@ export class CircuitBreaker {
             this.state = "HALF_OPEN";
 
             console.log("circuit changed to half open.")
+            logger.info("circuit_half_open");
         };
 
         try{
@@ -42,6 +45,7 @@ export class CircuitBreaker {
             //sucesssssssful requesttt
             this.state = "CLOSED"
             this.failures = 0;
+            logger.info("circuit_closed");
             return result;
 
         }catch(error){
@@ -50,12 +54,19 @@ export class CircuitBreaker {
             console.log(
                 `circuit failure count: ${this.failures}`
             );
+            //how do i get the service name here,
+            logger.warn("circuit_failure", {
+                failureCount: this.failures
+            });
 
             if(this.failures>=this.failureThreshold){
                 this.state = "OPEN";
                 this.openedAt = Date.now();
 
                 console.log("circuit changed to open.")
+                logger.error("circuit_open", {
+                    failureCount: this.failures
+                });
             }
 
             throw error;

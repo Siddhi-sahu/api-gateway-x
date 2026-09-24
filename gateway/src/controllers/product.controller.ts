@@ -4,6 +4,7 @@ import { AuthRequest } from "../types/auth.js";
 import { retry } from "../utils/retry.js";
 import { productServiceCircuitBreaker } from "../utils/circuitBreaker.js";
 import redisClient from "../config/redis.js";
+import { logger } from "../utils/logger.js";
 
 const productServiceUrl = process.env.PRODUCT_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
@@ -17,7 +18,6 @@ if(!SERVICE_API_KEY){
 }
 
 export async function getProductService(req: AuthRequest, res: Response){
-    console.log("hw")
     const redisCacheKey = `cache:products:all`;
     try{
         let cached: string | null = null;
@@ -25,9 +25,19 @@ export async function getProductService(req: AuthRequest, res: Response){
             cached = await redisClient.get(redisCacheKey);
         }catch(e){
             console.error("cache reading from redis failed", e);
+            logger.error("cache_read_failed", {
+                requestId: req.requestId,
+                error: e instanceof Error
+                    ? e.message
+                    : "Unknown error"
+            });
         }
         if(cached){
             console.log("cache hit")
+            logger.info("cache_hit_get_products", {
+                requestId: req.requestId,
+                key: redisCacheKey
+            });
             return res.status(200).json({
                 source: "cache",
                 data: JSON.parse(cached)
@@ -35,6 +45,10 @@ export async function getProductService(req: AuthRequest, res: Response){
         };
 
         console.log("cachee missed");
+        logger.info("cache_miss_get_products", {
+            requestId: req.requestId,
+            key: redisCacheKey
+        });
 
         const response = await productServiceCircuitBreaker.execute(()=>retry(()=>axios.get(productServiceUrl!,{   
             timeout: 3000,
@@ -43,6 +57,7 @@ export async function getProductService(req: AuthRequest, res: Response){
                 'Accept': 'application/json',
                 "X-Auth-User-Id": req.user?.id || "",
                 "X-Service-Key": SERVICE_API_KEY,
+                "X-Request-Id": req.requestId,
             }
         }))); 
         try{
@@ -70,6 +85,7 @@ export async function addProductService(req: Request, res: Response){
             timeout: 3000,
             headers: {
                 "X-Service-Key": SERVICE_API_KEY,
+                "X-Request-Id": req.requestId,
             }
         });
         console.log(response.data);

@@ -9,7 +9,6 @@ const userServiceUrl = process.env.USER_SERVICE_URL;
 const SERVICE_API_KEY= process.env.SERVICE_API_KEY;
 
 
-
 if (!userServiceUrl) {
     throw new Error("USER_SERVICE_URL is not defined");
 };
