@@ -21,9 +21,9 @@ if (!productServiceUrl) {
 type Health = "healthy" | "unhealthy";
 
 export async function health(req: Request, res: Response){
-    let redisHealth;
-    let userServiceHealth;
-    let productServiceHealth;
+    let redisHealth: Health;
+    let userServiceHealth: Health;
+    let productServiceHealth: Health;
     
     try{
         const res = await redisClient.ping();
@@ -65,10 +65,9 @@ export async function health(req: Request, res: Response){
     return res.json({
         gateway: "healthy",
         redis: redisHealth,
-        userService: userServiceHealth,
-        productService: productServiceHealth
+        services:{
+            userService: userServiceHealth,
+            productService: productServiceHealth
+        }
     });
-
-    
-    
 }
