@@ -10,7 +10,7 @@ app.use(express.json())
 
 app.use("/users", serviceRoutes);
 app.use("/users/auth", authRoutes);
-app.get("/health", async (_req, res) => {
+app.get("/users/health", async (_req, res) => {
     try {
         await pool.query("SELECT 1");
 

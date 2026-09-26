@@ -16,6 +16,7 @@ if(!SERVICE_API_KEY){
     throw new Error("SERVICE_API_KEY is not defined");        
 }
 
+
 export async function getUserService(req: AuthRequest, res: Response){
     logger.info("get_users_query_started", {
     requestId: req.requestId

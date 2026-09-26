@@ -10,18 +10,18 @@ app.use(express.json())
 
 app.use("/products", serviceKeyMiddleware, productRoutes);
 
-app.get("/health", async (_req, res) => {
+app.get("/products/health", async (_req, res) => {
     try {
         await pool.query("SELECT 1");
 
         return res.status(200).json({
             status: "healthy",
-            service: "user-service"
+            service: "product-service"
         });
     } catch {
         return res.status(503).json({
             status: "unhealthy",
-            service: "user-service"
+            service: "product-service"
         });
     }
 });
