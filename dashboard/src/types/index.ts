@@ -11,7 +11,7 @@ export interface Health {
     gateway: "healthy" | "unhealthy";
     redis: "healthy" | "unhealthy";
     services: {
-        user: "healthy" | "unhealthy";
-        product: "healthy" | "unhealthy";
+        userService: "healthy" | "unhealthy";
+        productService: "healthy" | "unhealthy";
     };
 }

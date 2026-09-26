@@ -14,7 +14,10 @@ export async function getHealth(){
     const response = await fetch(`${API_URL}/health`);
     if (!response.ok) {
         throw new Error("Failed to fetch health");
-    }
+    };
+
+    console.log(response);
+    // console.log(response.json())
 
     return response.json();
 }
