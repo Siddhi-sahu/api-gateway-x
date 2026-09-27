@@ -4,5 +4,6 @@ export const metrics = {
     cacheHits: 0,
     cacheMisses: 0,
     retries: 0,
-    rateLimitRejected: 0
+    rateLimitRejected: 0,
+    totalLatencyMs: 0
 };

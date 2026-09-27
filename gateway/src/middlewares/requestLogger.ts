@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from "express";
 import { logger } from "../utils/logger.js";
 import { metrics } from "../utils/metrics.js";
+import { addRequest } from "../utils/requestRecord.js";
 
 
 export function requestLogger(req: Request, res: Response, next: NextFunction){
@@ -11,13 +12,19 @@ export function requestLogger(req: Request, res: Response, next: NextFunction){
             metrics.requestsFailed++;
         }
         const duration = Date.now() - start;
-        logger.info("request_completed", {
+        metrics.totalLatencyMs += duration;
+
+        const record = {
             requestId: req.requestId,
             method: req.method,
             route: req.originalUrl,
             statusCode: res.statusCode,
-            durationMs: duration
-        })
+            durationMs: duration,
+            timestamp: new Date().toISOString()
+        };
+
+        addRequest(record);
+        logger.info("request_completed", record);
     });
 
     next();

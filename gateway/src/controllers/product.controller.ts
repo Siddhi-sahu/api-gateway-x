@@ -60,7 +60,7 @@ export async function getProductService(req: AuthRequest, res: Response){
                 "X-Service-Key": SERVICE_API_KEY,
                 "X-Request-Id": req.requestId,
             }
-        }))); 
+        }),3, {requestId: req.requestId, service: "product-service"})); 
         try{
             await redisClient.set(redisCacheKey, JSON.stringify(response.data), { EX: 60 });
         }catch(e){

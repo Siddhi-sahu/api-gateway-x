@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
-import type { Health, Metrics } from "../types";
-import { getHealth, getMetrics } from "../lib/api";
+import { type RequestRecord, type Health, type Metrics } from "../types";
+import { getHealth, getMetrics, getRecentRequests } from "../lib/api";
 import StatusCard from "./StatusCard";
 import MetricCard from "./MetricCard";
 
 function Dashboard() {
     const [metrics, setMetrics] = useState<Metrics | null>(null);
     const [health, setHealth] = useState<Health | null>(null);
+    const [recentRequests, setRecentRequests] = useState<RequestRecord | null>(null);
 
     async function loadDashboard() {
         try{
-            const [metricsData, healthData] = await Promise.all([
+            const [metricsData, healthData, requestsData] = await Promise.all([
                 getMetrics(),
-                getHealth()
+                getHealth(),
+                getRecentRequests()
             ]);
 
             setMetrics(metricsData);
             setHealth(healthData);
+            setRecentRequests(requestsData);
 
         }catch(e){
             console.error("Failed to load dashboard:", e);
@@ -43,6 +46,9 @@ function Dashboard() {
     const totalCacheRequests = metrics.cacheHits + metrics.cacheMisses;
 
     const cacheHitRate = totalCacheRequests === 0 ? 0 : (metrics.cacheHits/totalCacheRequests)*100;
+
+    const averageLatency = metrics.requestsTotal === 0 ? 0 : metrics.totalLatencyMs / metrics.requestsTotal;
+
 
     return (
         <main className="dashboard">
@@ -82,7 +88,7 @@ function Dashboard() {
 
                 <div className="metrics-grid">
                     <MetricCard
-                        label="Requests"
+                        label="Requests since gateway restarted"
                         value={metrics.requestsTotal}
                     />
 
@@ -94,6 +100,11 @@ function Dashboard() {
                     <MetricCard
                         label="Cache Hit Rate"
                         value={`${cacheHitRate.toFixed(1)}%`}
+                    />
+
+                    <MetricCard
+                        label="Average Requests Latency"
+                        value={`${averageLatency}`}
                     />
 
                     <MetricCard

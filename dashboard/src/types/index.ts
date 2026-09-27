@@ -4,7 +4,8 @@ export interface Metrics {
     cacheHits: number,
     cacheMisses: number,
     retries: number,
-    rateLimitRejected: number
+    rateLimitRejected: number,
+    totalLatencyMs: number
 };
 
 export interface Health {
@@ -14,4 +15,13 @@ export interface Health {
         userService: "healthy" | "unhealthy";
         productService: "healthy" | "unhealthy";
     };
+};
+
+export interface RequestRecord {
+    requestId: string;
+    method: string;
+    route: string;
+    statusCode: number;
+    durationMs: number;
+    timestamp: string;
 }

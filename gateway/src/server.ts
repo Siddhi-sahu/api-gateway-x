@@ -11,6 +11,7 @@ import { requestId } from "./middlewares/requestId.js";
 import { requestLogger } from "./middlewares/requestLogger.js";
 import { metrics } from "./utils/metrics.js";
 import healthRoutes from './routes/health.routes.js'
+import { getRecentRequests } from "./utils/requestRecord.js";
 
 const app = express()
 app.use(cors());
@@ -29,6 +30,10 @@ app.use("/api/products", productRoutes);
 app.get("/metrics", (_req, res) => {
     res.json(metrics);
 });
+
+app.get("/recent-requests", (_req, res) =>{
+    res.json(getRecentRequests());
+})
 
 const PORT = process.env.PORT || 3000;
 
