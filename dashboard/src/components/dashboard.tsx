@@ -47,12 +47,12 @@ function Dashboard() {
     return (
         <main className="dashboard">
             <header>
-                <h1>API Gateway</h1>
-                <p>System monitoring dashboard</p>
+                <h1>api-gateway-x</h1>
+                <p>system monitoring</p>
             </header>
 
             <section>
-                <h2>System Status</h2>
+                <h2>service status</h2>
 
                 <div className="status-grid">
                     <StatusCard
@@ -78,7 +78,7 @@ function Dashboard() {
             </section>
 
             <section>
-                <h2>Metrics</h2>
+                <h2>metrics</h2>
 
                 <div className="metrics-grid">
                     <MetricCard

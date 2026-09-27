@@ -6,7 +6,7 @@ import { metrics } from "../utils/metrics.js";
 
 //allow 10 re/min
 //fixed window counter
-const REQUEST_LIMIT = 10;
+const REQUEST_LIMIT = 50;
 const WINDOW_SIZE_IN_SECONDS = 60;
 
 export const ratelimiter = async(req: AuthRequest, res: Response, next: NextFunction) =>{

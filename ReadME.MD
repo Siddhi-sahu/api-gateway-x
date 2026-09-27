@@ -523,3 +523,4 @@ TODO:
 11. persist metrics in db
 12. add Prometheus
 13. fix route health - add which route routes to which
+14. can call user/priduct service from dashboard
