@@ -526,3 +526,4 @@ TODO:
 14. can call user/priduct service from dashboard
 15. fix rate limiter plus its returning negative count
 16. send circuit breaker state through its endpoint.
+17. development mode, react requests should not be recorded.

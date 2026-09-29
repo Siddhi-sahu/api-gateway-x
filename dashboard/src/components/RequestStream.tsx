@@ -1,0 +1,11 @@
+import type { RequestRecord } from "../types";
+
+interface RequestStreamProps { requests: RequestRecord[]; unavailable: boolean; }
+function formatTimestamp(timestamp: string) { const date = new Date(timestamp); return Number.isNaN(date.getTime()) ? timestamp : new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(date); }
+function statusTone(statusCode: number) { if (statusCode >= 500) return "failure"; if (statusCode >= 400) return "warning"; return "success"; }
+
+function RequestStream({ requests, unavailable }: RequestStreamProps) {
+    return <section className="panel request-stream" aria-labelledby="request-stream-heading"><div className="panel-heading"><div><p className="eyebrow">REQUEST STREAM</p><h2 id="request-stream-heading">Recent gateway activity</h2></div><span className="panel-source">SOURCE /recent-requests</span></div>{unavailable ? <div className="unavailable-state"><strong>REQUEST STREAM UNAVAILABLE</strong><span>Recent request records could not be retrieved from the gateway.</span></div> : requests.length === 0 ? <div className="unavailable-state unavailable-state--quiet"><strong>NO REQUESTS CAPTURED</strong><span>The gateway has not returned any recent request records.</span></div> : <div className="request-table" role="table" aria-label="Recent gateway requests"><div className="request-table__header" role="row"><span role="columnheader">TIME</span><span role="columnheader">REQUEST ID</span><span role="columnheader">METHOD</span><span role="columnheader">ROUTE</span><span role="columnheader">STATUS</span><span role="columnheader">LATENCY</span></div>{requests.map((request) => <div className="request-table__row" role="row" key={`${request.requestId}-${request.timestamp}`}><span role="cell">{formatTimestamp(request.timestamp)}</span><span className="request-id" role="cell" title={request.requestId}>{request.requestId}</span><strong className={`method method--${request.method.toLowerCase()}`} role="cell">{request.method}</strong><strong className="route" role="cell">{request.route}</strong><strong className={`status-code status-code--${statusTone(request.statusCode)}`} role="cell">{request.statusCode}</strong><span className="latency" role="cell">{request.durationMs}ms</span></div>)}</div>}</section>;
+}
+
+export default RequestStream;

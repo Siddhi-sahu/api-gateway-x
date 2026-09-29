@@ -26,7 +26,8 @@ export function requestLogger(req: Request, res: Response, next: NextFunction){
         if (
             req.originalUrl !== "/health" &&
             req.originalUrl !== "/metrics" &&
-            req.originalUrl !== "/recent-requests"
+            req.originalUrl !== "/recent-requests" &&
+            req.originalUrl !== "/circuit-breakers"
         ) {
             addRequest(record);
         }

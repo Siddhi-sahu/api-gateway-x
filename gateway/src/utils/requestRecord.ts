@@ -12,7 +12,7 @@ const recentRequests: RequestRecord[] = [];
 export function addRequest(record: RequestRecord){
     recentRequests.unshift(record);
 
-    if(recentRequests.length > 20){
+    if(recentRequests.length > 10){
         recentRequests.pop();
     }
 };
