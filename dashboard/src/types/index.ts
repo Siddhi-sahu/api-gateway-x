@@ -25,3 +25,8 @@ export interface RequestRecord {
     durationMs: number;
     timestamp: string;
 }
+
+export interface CircuitBreakers {
+    productService: "CLOSED" | "OPEN" | "HALF_OPEN";
+    userService: "CLOSED" | "OPEN" | "HALF_OPEN";
+}

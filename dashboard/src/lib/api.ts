@@ -32,3 +32,16 @@ export async function getRecentRequests(){
 
     return response.json();
 }
+
+export async function getCircuitBreakers(){
+    const response = await fetch(`${API_URL}/circuit-breakers`);
+
+    console.log("cs", response);
+
+    if(!response.ok){
+        throw new Error("Failed to fetch recent requests.");
+
+    };
+
+    return response.json();
+}

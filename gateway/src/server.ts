@@ -12,6 +12,8 @@ import { requestLogger } from "./middlewares/requestLogger.js";
 import { metrics } from "./utils/metrics.js";
 import healthRoutes from './routes/health.routes.js'
 import { getRecentRequests } from "./utils/requestRecord.js";
+import { getProductServiceCircuitState } from "./controllers/product.controller.js";
+import { getUserServiceCircuitState } from "./controllers/user.controller.js";
 
 const app = express()
 app.use(cors());
@@ -33,6 +35,13 @@ app.get("/metrics", (_req, res) => {
 
 app.get("/recent-requests", (_req, res) =>{
     res.json(getRecentRequests());
+});
+
+app.get("/circuit-breakers", (_req, res) =>{
+    res.json({
+        productService: getProductServiceCircuitState(),
+        userService: getUserServiceCircuitState()
+    });
 })
 
 const PORT = process.env.PORT || 3000;

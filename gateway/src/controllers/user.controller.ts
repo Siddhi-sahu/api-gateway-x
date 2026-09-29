@@ -141,4 +141,8 @@ export async function userLogin(req: AuthRequest, res: Response){
         return res.status(500).json({ error: e, msg: "Downstream service errorm." });
 
     } 
+};
+
+export function getUserServiceCircuitState(){
+    return userServiceCircuitBreaker.getState()
 }

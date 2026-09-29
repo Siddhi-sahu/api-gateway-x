@@ -95,4 +95,8 @@ export async function addProductService(req: Request, res: Response){
         console.log(e);
         return res.status(500).json({ error: e, msg: "Downstream Product service error. " });
     } 
+};
+
+export function getProductServiceCircuitState(){
+    return productServiceCircuitBreaker.getState();
 }

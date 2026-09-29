@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { type RequestRecord, type Health, type Metrics } from "../types";
-import { getHealth, getMetrics, getRecentRequests } from "../lib/api";
+import { type RequestRecord, type Health, type Metrics, type CircuitBreakers } from "../types";
+import { getCircuitBreakers, getHealth, getMetrics, getRecentRequests } from "../lib/api";
 import StatusCard from "./StatusCard";
 import MetricCard from "./MetricCard";
 
@@ -8,18 +8,22 @@ function Dashboard() {
     const [metrics, setMetrics] = useState<Metrics | null>(null);
     const [health, setHealth] = useState<Health | null>(null);
     const [recentRequests, setRecentRequests] = useState<RequestRecord[]>([]);
+    const [circuitBreakers, setCircuitBreakers] = useState<CircuitBreakers | null>(null);
+
 
     async function loadDashboard() {
         try{
-            const [metricsData, healthData, requestsData] = await Promise.all([
+            const [metricsData, healthData, requestsData, circuitBreakersData] = await Promise.all([
                 getMetrics(),
                 getHealth(),
-                getRecentRequests()
+                getRecentRequests(),
+                getCircuitBreakers()
             ]);
 
             setMetrics(metricsData);
             setHealth(healthData);
             setRecentRequests(requestsData);
+            setCircuitBreakers(circuitBreakersData);
 
         }catch(e){
             console.error("Failed to load dashboard:", e);
@@ -49,7 +53,7 @@ function Dashboard() {
 
     const averageLatency = metrics.requestsTotal === 0 ? 0 : metrics.totalLatencyMs / metrics.requestsTotal;
 
-    console.log(recentRequests);
+    console.log(circuitBreakers);
     return (
         <main className="dashboard">
             <header>
