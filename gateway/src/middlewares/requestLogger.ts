@@ -23,7 +23,13 @@ export function requestLogger(req: Request, res: Response, next: NextFunction){
             timestamp: new Date().toISOString()
         };
 
-        addRequest(record);
+        if (
+            req.originalUrl !== "/health" &&
+            req.originalUrl !== "/metrics" &&
+            req.originalUrl !== "/recent-requests"
+        ) {
+            addRequest(record);
+        }
         logger.info("request_completed", record);
     });
 

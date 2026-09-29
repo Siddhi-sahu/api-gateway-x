@@ -7,7 +7,7 @@ import MetricCard from "./MetricCard";
 function Dashboard() {
     const [metrics, setMetrics] = useState<Metrics | null>(null);
     const [health, setHealth] = useState<Health | null>(null);
-    const [recentRequests, setRecentRequests] = useState<RequestRecord | null>(null);
+    const [recentRequests, setRecentRequests] = useState<RequestRecord[]>([]);
 
     async function loadDashboard() {
         try{
@@ -49,7 +49,7 @@ function Dashboard() {
 
     const averageLatency = metrics.requestsTotal === 0 ? 0 : metrics.totalLatencyMs / metrics.requestsTotal;
 
-
+    console.log(recentRequests);
     return (
         <main className="dashboard">
             <header>

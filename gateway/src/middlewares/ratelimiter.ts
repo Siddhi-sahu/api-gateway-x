@@ -6,7 +6,7 @@ import { metrics } from "../utils/metrics.js";
 
 //allow 10 re/min
 //fixed window counter
-const REQUEST_LIMIT = 50;
+const REQUEST_LIMIT = 500;
 const WINDOW_SIZE_IN_SECONDS = 60;
 
 export const ratelimiter = async(req: AuthRequest, res: Response, next: NextFunction) =>{
@@ -21,6 +21,11 @@ export const ratelimiter = async(req: AuthRequest, res: Response, next: NextFunc
         }
 
         const ttl = await redisClient.ttl(redisKey);
+
+        //stale key case.
+        if(ttl === -1){
+            await redisClient.expire(redisKey, WINDOW_SIZE_IN_SECONDS);
+        }
 
         //send headers back to client
         res.setHeader("rate-limit", REQUEST_LIMIT);

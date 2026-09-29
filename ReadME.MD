@@ -519,8 +519,10 @@ TODO:
 7. test retry/circuit breaker again.✅
 8. cache invalidation
 9. Cache failure shouldn't kill the API - test redis shut off
-10. Add relevant structured logs
+10. Add relevant structured logs✅
 11. persist metrics in db
 12. add Prometheus
-13. fix route health - add which route routes to which
+13. fix route health - add which route routes to which✅
 14. can call user/priduct service from dashboard
+15. fix rate limiter plus its returning negative count
+16. send circuit breaker state through its endpoint.

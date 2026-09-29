@@ -17,9 +17,9 @@ const app = express()
 app.use(cors());
 app.use(express.json())
 
-app.use(ratelimiter);
 app.use(requestId);
-app.use(requestLogger)
+app.use(requestLogger);
+app.use(ratelimiter);
 
 app.use("/health", healthRoutes);
 
