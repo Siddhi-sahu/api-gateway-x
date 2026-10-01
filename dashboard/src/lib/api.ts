@@ -1,47 +1,40 @@
-const API_URL = "http://localhost:3000";
+import type { CircuitBreakers, Health, Metrics, RequestRecord } from "../types";
 
-export async function getMetrics(){
-    const response = await fetch(`${API_URL}/metrics`);
+export const API_URL = "http://localhost:3000";
 
-    if(!response.ok){
-        throw new Error("Failed to fetch metrics");
-    };
+async function fetchJson<T>(path: string, errorMessage: string): Promise<T> {
+    const response = await fetch(`${API_URL}${path}`);
 
-    return response.json();
-};
-
-export async function getHealth(){
-    const response = await fetch(`${API_URL}/health`);
     if (!response.ok) {
-        throw new Error("Failed to fetch health");
-    };
+        throw new Error(errorMessage);
+    }
 
-    console.log(response);
-    // console.log(response.json())
-
-    return response.json();
-};
-
-export async function getRecentRequests(){
-    const response = await fetch(`${API_URL}/recent-requests`);
-
-    if(!response.ok){
-        throw new Error("Failed to fetch recent requests.");
-
-    };
-
-    return response.json();
+    return response.json() as Promise<T>;
 }
 
-export async function getCircuitBreakers(){
-    const response = await fetch(`${API_URL}/circuit-breakers`);
+export function getMetrics() {
+    return fetchJson<Metrics>("/metrics", "Failed to fetch metrics");
+}
 
-    console.log("cs", response);
+export function getHealth() {
+    return fetchJson<Health>("/health", "Failed to fetch health");
+}
 
-    if(!response.ok){
-        throw new Error("Failed to fetch recent requests.");
+/**
+ * Same call as getHealth, but also measures how long the browser waited.
+ * /health fans out to Redis + both services before answering, so this
+ * round-trip covers the whole probe — it is not per-service latency.
+ */
+export async function getHealthTimed() {
+    const startedAt = performance.now();
+    const data = await getHealth();
+    return { data, rttMs: performance.now() - startedAt };
+}
 
-    };
+export function getRecentRequests() {
+    return fetchJson<RequestRecord[]>("/recent-requests", "Failed to fetch recent requests");
+}
 
-    return response.json();
+export function getCircuitBreakers() {
+    return fetchJson<CircuitBreakers>("/circuit-breakers", "Failed to fetch circuit breakers");
 }
