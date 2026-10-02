@@ -1,6 +1,7 @@
 import type { CircuitBreakers, Health, Metrics, RequestRecord } from "../types";
 
-export const API_URL = "http://localhost:3000";
+// Set VITE_API_URL at build time (e.g. in Vercel) to point at a deployed gateway.
+export const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:3000").replace(/\/+$/, "");
 
 async function fetchJson<T>(path: string, errorMessage: string): Promise<T> {
     const response = await fetch(`${API_URL}${path}`);

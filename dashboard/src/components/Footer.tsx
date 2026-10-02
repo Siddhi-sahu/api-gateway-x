@@ -17,7 +17,8 @@ const ENDPOINTS: { key: EndpointKey; path: string }[] = [
 
 /** Bottom status bar: did each endpoint answer on the last poll? */
 function Footer({ errors, pollCount, sampleCount }: FooterProps) {
-    const port = new URL(API_URL).port || "80";
+    const url = new URL(API_URL);
+    const port = url.port || (url.protocol === "https:" ? "443" : "80");
 
     return (
         <footer className="statusbar">

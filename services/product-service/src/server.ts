@@ -6,9 +6,7 @@ import { pool } from "./config/database.js"
 const app = express()
 const PORT = 3002
 
-app.use(express.json())
-
-app.use("/products", serviceKeyMiddleware, productRoutes);
+app.use(express.json());
 
 app.get("/products/health", async (_req, res) => {
     try {
@@ -25,6 +23,8 @@ app.get("/products/health", async (_req, res) => {
         });
     }
 });
+
+app.use("/products", serviceKeyMiddleware, productRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`)
