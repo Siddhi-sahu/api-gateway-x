@@ -31,7 +31,7 @@ const DEPENDENCIES: Dependency[] = [
         component: "redis",
         name: "REDIS",
         port: ":6379",
-        responsibility: "Rate-limit counters and the GET /api/products cache",
+        responsibility: "Rate-limit counters and cache",
         probe: "PING → PONG",
     },
     {
@@ -75,7 +75,6 @@ function SystemStatus({ health, unavailable, samples, rttMs }: SystemStatusProps
         <Panel
             id="health-matrix"
             title="DEPENDENCY HEALTH MATRIX"
-            subtitle="The gateway's /health handler probes Redis and both services, then reports all four."
             meta={
                 <>
                     <span className="meta-figure">
